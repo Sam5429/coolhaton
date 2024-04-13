@@ -18,5 +18,5 @@ serv : serv.c
 #-f : pas de mess d'erreur si ficher existe pas
 clean :
 	@rm -f *.o code*/*.gch
-	@rm -f codeCli/fonction.c
+#@rm -f codeCli/fonction.c
 	@rm -f .main.c.swp

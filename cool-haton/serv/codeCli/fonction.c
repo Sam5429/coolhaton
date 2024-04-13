@@ -1,18 +1,37 @@
-#include <stdio.h>
+#include <string.h>
 #include "fonction.h"
 
-int min(int* liste, int taille_liste){
-    int val_min = liste[0];
-    for(int i=1; i<taille_liste; i++){
-        if(val_min > liste[i])
-            val_min = liste[i];
-    }
-    return val_min;
+float min(float* liste, unsigned int size){
+    // écrire ici
+    return 0;
 }
 
-int max(int* liste, int taille_liste){
-    while(1){
-        continue;
-    }
-    return 1;
+float max(float* liste, unsigned int size){
+    // écrire ici
+    return 0;
+}
+
+unsigned int factoriel(unsigned int n){
+    // écrire ici
+    return 0;
+}
+
+char* golmon(){
+    // écrire ici
+    return "0";
+}
+
+int tchointchointchoin(char* phrase){
+    // écrire ici
+    return "0";
+}
+
+unsigned char masque(unsigned char n){
+    // écrire ici
+    return 0;
+}
+
+unsigned char masquage(unsigned char a, unsigned char n){
+    // écrire ici
+    return 0;
 }

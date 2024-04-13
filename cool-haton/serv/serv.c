@@ -10,9 +10,8 @@
 #include <sys/types.h> //contains lot of data struct
 #include <sys/socket.h> //contains struct needed for socket
 #include <netinet/in.h> //contains const and struct needed for internet domain adresses
-#include <string.h> // for bzero fct
+#include <string.h> // for bzero fct and str
 #include <unistd.h> // for read and write
-#include <string.h>
 
 const int S_ADDR = 54000; // serveur addr
 const int BUFF_SIZE = 256; // buffer size
@@ -23,6 +22,7 @@ void error(char* msg){
     exit(-1);
 }
 
+// recive a file from the client
 void get_file(int client){
     FILE* file = fopen("codeCli/fonction.c","w");
     if(file==NULL)
@@ -38,12 +38,12 @@ void get_file(int client){
     fclose(file);
 }
 
-// return false if file is corrupted
+// return 0 if file is corrupted
 int analyse_file(FILE* file){
     char buffer[100];
     // test if there is syscall
     while(fgets(buffer,sizeof(buffer),file)){
-        if(strstr(buffer,"system")!=NULL){
+        if(strstr(buffer,"system")!=NULL && strstr(buffer,"malloc")!=NULL){
             return 0;
         }
     }
@@ -103,34 +103,33 @@ int main(int argc, char *argv[]){
     / - size of the struct
     **************************************************************************/
     while(1){
-    newsockfd = accept(sockfd, (struct sockaddr*) &cli_addr, (socklen_t*restrict)&clilen); // syscall that bloc process until client co
-                                                                        // wake process up when co is succefull
-    if(newsockfd < 0){
-        error("ERROR on accept\n");
-    }
-    else{
-        printf("client accepted\n");
-    }
+        newsockfd = accept(sockfd, (struct sockaddr*) &cli_addr, (socklen_t*restrict)&clilen); // syscall that bloc process until client co
+        // wake process up when co is succefull
+        if(newsockfd < 0){
+            error("ERROR on accept\n");
+        }
+        else{
+            printf("client accepted\n");
+        }
 
     /**********************************************************************************************************
                                     code done after a succefull conection
     ************************************************************************************************************/
 
-    get_file(newsockfd);
+        get_file(newsockfd);
 
-    FILE* file = fopen("codeCli/fonction.c","r");
-    if(file==NULL)
-        error("ERROR opening file\n");
-    if(analyse_file(file)){
-        system("make");
-        system("./main");
+        FILE* file = fopen("codeCli/fonction.c","r");
+        if(file==NULL)
+            error("ERROR opening file\n");
+        if(analyse_file(file)){
+            system("make");
+            system("./main");
+        }
+        else{
+            system("make clean");
+            error("file corrupted");
+        }
+        fclose(file);
     }
-    else{
-        system("make clean");
-        error("file corrupted");
-    }
-    fclose(file);
-
     return 0;
-    }
 }
